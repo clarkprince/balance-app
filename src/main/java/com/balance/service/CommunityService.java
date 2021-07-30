@@ -6,17 +6,18 @@ import com.balance.model.Community;
 import com.balance.model.dto.CommunityDTO;
 import com.balance.repository.CityRepository;
 import com.balance.repository.CommunityRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
-@RequiredArgsConstructor
 public class CommunityService {
 
    private final CommunityRepository communityRepository;
    private final CityRepository cityRepository;
+
+   public CommunityService(CommunityRepository communityRepository, CityRepository cityRepository) {
+      this.communityRepository = communityRepository;
+      this.cityRepository = cityRepository;
+   }
 
    public CommunityDTO addCommunity(CommunityDTO communityDTO) {
       City city = cityRepository.getById(communityDTO.getCityId());

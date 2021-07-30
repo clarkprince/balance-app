@@ -2,7 +2,6 @@
 package com.balance.config;
 
 import com.balance.service.UserDetailsInfoService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,11 +16,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
    private final UserDetailsInfoService userDetailsInfoService;
    private final JwtFilter jwtFilter;
+
+   public SecurityConfiguration(UserDetailsInfoService userDetailsInfoService, JwtFilter jwtFilter) {
+      this.userDetailsInfoService = userDetailsInfoService;
+      this.jwtFilter = jwtFilter;
+   }
 
    @Override
    protected void configure(AuthenticationManagerBuilder auth) throws Exception {

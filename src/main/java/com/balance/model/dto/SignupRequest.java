@@ -1,13 +1,7 @@
 package com.balance.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class SignupRequest   {
   @JsonProperty("firstName")
   private String firstName;
@@ -23,5 +17,56 @@ public class SignupRequest   {
 
   @JsonProperty("roles")
   private String roles;
+
+   public SignupRequest(String firstName, String lastName, String username, String password, String roles) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.username = username;
+      this.password = password;
+      this.roles = roles;
+   }
+
+   public SignupRequest() {
+   }
+
+   public String getFirstName() {
+      return this.firstName;
+   }
+
+   public String getLastName() {
+      return this.lastName;
+   }
+
+   public String getUsername() {
+      return this.username;
+   }
+
+   public String getPassword() {
+      return this.password;
+   }
+
+   public String getRoles() {
+      return this.roles;
+   }
+
+   public void setFirstName(String firstName) {
+      this.firstName = firstName;
+   }
+
+   public void setLastName(String lastName) {
+      this.lastName = lastName;
+   }
+
+   public void setUsername(String username) {
+      this.username = username;
+   }
+
+   public void setPassword(String password) {
+      this.password = password;
+   }
+
+   public void setRoles(String roles) {
+      this.roles = roles;
+   }
 }
 

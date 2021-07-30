@@ -9,8 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,13 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@Slf4j
-@RequiredArgsConstructor
 public class ApiController {
 
+   private static final Logger log = org.slf4j.LoggerFactory.getLogger(ApiController.class);
    private final UserService userService;
    private final CommunityService communityService;
    private final CityService cityService;
+
+   public ApiController(UserService userService, CommunityService communityService, CityService cityService) {
+      this.userService = userService;
+      this.communityService = communityService;
+      this.cityService = cityService;
+   }
 
    @ApiOperation(value = "Sign Up User", nickname = "apiSignupPost", notes = "", authorizations = {
          @Authorization(value = "Bearer")

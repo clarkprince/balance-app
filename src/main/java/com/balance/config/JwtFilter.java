@@ -1,8 +1,7 @@
 package com.balance.config;
 
 import com.balance.service.UserDetailsInfoService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,18 +17,22 @@ import java.io.IOException;
 
 import static org.springframework.util.StringUtils.hasText;
 
-@RequiredArgsConstructor
-@Slf4j
 @Component
 public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION = "Authorization";
+   private static final Logger log = org.slf4j.LoggerFactory.getLogger(JwtFilter.class);
 
-    private final JwtProvider jwtProvider;
+   private final JwtProvider jwtProvider;
 
     private final UserDetailsInfoService userDetailsInfoService;
 
-    @Override
+   public JwtFilter(JwtProvider jwtProvider, UserDetailsInfoService userDetailsInfoService) {
+      this.jwtProvider = jwtProvider;
+      this.userDetailsInfoService = userDetailsInfoService;
+   }
+
+   @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         if (token != null && jwtProvider.validateToken(token)) {
