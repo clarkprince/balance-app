@@ -1,7 +1,7 @@
 
 package com.balance.config;
 
-import com.balance.service.UserDetailsInfoService;
+import com.balance.service.user.UserDetailsInfoService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -58,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       http.httpBasic().disable()
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/api/signup", "/api/login", "/").permitAll()
+            .antMatchers("/", "/api/signup", "/api/login", "/api/activate").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

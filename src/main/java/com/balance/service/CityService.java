@@ -3,7 +3,6 @@ package com.balance.service;
 import com.balance.model.City;
 import com.balance.model.dto.CityDTO;
 import com.balance.repository.CityRepository;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component

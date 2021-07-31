@@ -11,8 +11,9 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 @Configuration
 @EnableSwagger2
@@ -23,8 +24,8 @@ public class OpenAPIDocumentationConfig {
             .select()
             .apis(RequestHandlerSelectors.basePackage("com.balance"))
             .build()
-            .securityContexts(Arrays.asList(securityContext()))
-            .securitySchemes(Arrays.asList(new ApiKey("Bearer", "Authorization", "header")))
+            .securityContexts(singletonList(securityContext()))
+            .securitySchemes(singletonList(new ApiKey("Bearer", "Authorization", "header")))
             .directModelSubstitute(org.joda.time.LocalDate.class, java.sql.Date.class)
             .directModelSubstitute(org.joda.time.DateTime.class, java.util.Date.class);
    }
@@ -37,7 +38,7 @@ public class OpenAPIDocumentationConfig {
       AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
       AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
       authorizationScopes[0] = authorizationScope;
-      return Arrays.asList(new SecurityReference("Bearer", authorizationScopes));
+      return singletonList(new SecurityReference("Bearer", authorizationScopes));
    }
 
 }

@@ -1,18 +1,21 @@
 package com.balance.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "users")
+public class User implements Serializable {
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
    private long id;
    @Column(unique = true, nullable = false)
    private String username;
+   @Column(unique = true, nullable = false)
+   private String email;
    @Column(nullable = false)
    private String password;
    @Column(nullable = false)
@@ -21,32 +24,20 @@ public class User {
    private String lastName;
    @Column(nullable = false)
    private String roles;
-   @OneToMany(mappedBy = "user")
+   @Column(nullable = false)
+   private boolean active;
+   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
    private List<Community> communities;
 
-   public User(long id, String username, String password, String firstName, String lastName, String roles, List<Community> communities) {
-      this.id = id;
-      this.username = username;
-      this.password = password;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.roles = roles;
-      this.communities = communities;
-   }
-
-   public User() {
-   }
-
-
-   public List<Community> addCommunity(Community community) {
+   public void addCommunity(Community community) {
       if (Objects.isNull(communities)) {
          communities = new ArrayList<>();
       }
-      community.setUser(this);
-      communities.add(community);
-      return communities;
+      if (communities.contains(community)) {
+         community.setUser(this);
+         communities.add(community);
+      }
    }
-
 
    public long getId() {
       return this.id;
@@ -102,5 +93,21 @@ public class User {
 
    public void setCommunities(List<Community> communities) {
       this.communities = communities;
+   }
+
+   public boolean isActive() {
+      return active;
+   }
+
+   public void setActive(boolean active) {
+      this.active = active;
+   }
+
+   public String getEmail() {
+      return email;
+   }
+
+   public void setEmail(String email) {
+      this.email = email;
    }
 }

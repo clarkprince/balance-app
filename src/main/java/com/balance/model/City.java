@@ -1,11 +1,12 @@
 package com.balance.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "city")
-public class City {
+public class City implements Serializable {
 
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)

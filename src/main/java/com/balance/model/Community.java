@@ -1,10 +1,12 @@
 package com.balance.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "community")
-public class Community {
+public class Community implements Serializable {
 
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
@@ -57,5 +59,19 @@ public class Community {
 
    public void setUser(User user) {
       this.user = user;
+   }
+
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      Community community = (Community) o;
+      return id == community.id;
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(id);
    }
 }

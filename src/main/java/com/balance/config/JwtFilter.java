@@ -1,7 +1,8 @@
 package com.balance.config;
 
-import com.balance.service.UserDetailsInfoService;
+import com.balance.service.user.UserDetailsInfoService;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +21,12 @@ import static org.springframework.util.StringUtils.hasText;
 @Component
 public class JwtFilter extends GenericFilterBean {
 
-    public static final String AUTHORIZATION = "Authorization";
-   private static final Logger log = org.slf4j.LoggerFactory.getLogger(JwtFilter.class);
+   public static final String AUTHORIZATION = "Authorization";
+   private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
 
    private final JwtProvider jwtProvider;
 
-    private final UserDetailsInfoService userDetailsInfoService;
+   private final UserDetailsInfoService userDetailsInfoService;
 
    public JwtFilter(JwtProvider jwtProvider, UserDetailsInfoService userDetailsInfoService) {
       this.jwtProvider = jwtProvider;
@@ -33,22 +34,22 @@ public class JwtFilter extends GenericFilterBean {
    }
 
    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String token = getTokenFromRequest((HttpServletRequest) servletRequest);
-        if (token != null && jwtProvider.validateToken(token)) {
-            String userLogin = jwtProvider.getLoginFromToken(token);
-            UserDetails detailsInfo = userDetailsInfoService.loadUserByUsername(userLogin);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(detailsInfo, null, detailsInfo.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        }
-        filterChain.doFilter(servletRequest, servletResponse);
-    }
+   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+      String token = getTokenFromRequest((HttpServletRequest) servletRequest);
+      if (token != null && jwtProvider.validateToken(token)) {
+         String userLogin = jwtProvider.getLoginFromToken(token);
+         UserDetails detailsInfo = userDetailsInfoService.loadUserByUsername(userLogin);
+         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(detailsInfo, null, detailsInfo.getAuthorities());
+         SecurityContextHolder.getContext().setAuthentication(auth);
+      }
+      filterChain.doFilter(servletRequest, servletResponse);
+   }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
-        String bearer = request.getHeader(AUTHORIZATION);
-        if (hasText(bearer) && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
-        }
-        return null;
-    }
+   private String getTokenFromRequest(HttpServletRequest request) {
+      String bearer = request.getHeader(AUTHORIZATION);
+      if (hasText(bearer) && bearer.startsWith("Bearer ")) {
+         return bearer.substring(7);
+      }
+      return null;
+   }
 }

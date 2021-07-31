@@ -1,4 +1,4 @@
-package com.balance.service;
+package com.balance.service.user;
 
 import com.balance.model.User;
 import com.balance.model.UserDetailsInfo;
@@ -8,7 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
+
 @Component
+@Transactional
 public class UserDetailsInfoService implements UserDetailsService {
 
    private final UserRepository userRepository;

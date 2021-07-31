@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
    private static final Logger log = org.slf4j.LoggerFactory.getLogger(JwtProvider.class);
-   @Value("$(jwt.secret)")
+   @Value("${bearer.token.secret}")
    private String jwtSecret;
    public String generateToken(String login) {
       Date date = Date.from(LocalDate.now().plusDays(15).atStartOfDay(ZoneId.systemDefault()).toInstant());
