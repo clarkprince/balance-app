@@ -15,39 +15,41 @@ import java.util.Arrays;
 @Component
 public class EmailService {
 
-   private static final Logger log = LoggerFactory.getLogger(EmailService.class);
+	private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
-   @Value("${server.baseUrl}")
-   private String baseUrl;
-   @Value("${mail.smtp.sender.address}")
-   private String senderAddress;
+	@Value("${server.baseUrl}")
+	private String baseUrl;
+	@Value("${mail.smtp.sender.address}")
+	private String senderAddress;
 
-   private final JavaMailSender javaMailSender;
+	private final JavaMailSender javaMailSender;
 
+	public EmailService(JavaMailSender javaMailSender) {
+		this.javaMailSender = javaMailSender;
+	}
 
-   public EmailService(JavaMailSender javaMailSender) {
-      this.javaMailSender = javaMailSender;
-   }
+	public void sendVerificationTokenEmail(VerificationToken verificationToken) {
+		try {
+			MimeMessage activationEmail = createActivationEmail(verificationToken);
+			log.info("Sending activation email to {}", Arrays.toString(activationEmail.getAllRecipients()));
+			javaMailSender.send(activationEmail);
+		} catch (MessagingException exception) {
+			log.error("Failed to create a message", exception);
+		}
+	}
 
+	private MimeMessage createActivationEmail(VerificationToken verificationToken) throws MessagingException {
+		String email = verificationToken.getUser().getUsername();
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+		mimeMessageHelper.setSubject("User Account Activation");
+		mimeMessageHelper.setText(getHTML(verificationToken.getToken()), true);
+		mimeMessageHelper.setFrom(senderAddress);
+		mimeMessageHelper.setTo(email);
+		return mimeMessage;
+	}
 
-   public void sendVerificationTokenEmail(VerificationToken verificationToken) {
-      try {
-         MimeMessage activationEmail = createActivationEmail(verificationToken);
-         log.info("Sending activation email to {}", Arrays.toString(activationEmail.getAllRecipients()));
-         javaMailSender.send(activationEmail);
-      } catch (MessagingException exception) {
-         log.error("Failed to create a message", exception);
-      }
-   }
-
-   private MimeMessage createActivationEmail(VerificationToken verificationToken) throws MessagingException {
-      String email = verificationToken.getUser().getUsername();
-      MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-      MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-      mimeMessageHelper.setSubject("User Account Activation");
-      mimeMessageHelper.setText(baseUrl + "/api/activate?activationToken=" + verificationToken.getToken());
-      mimeMessageHelper.setFrom(senderAddress);
-      mimeMessageHelper.setTo(email);
-      return mimeMessage;
-   }
+	private String getHTML(String token) {
+		return token;
+	}
 }

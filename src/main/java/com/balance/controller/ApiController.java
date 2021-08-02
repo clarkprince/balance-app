@@ -84,7 +84,7 @@ public class ApiController {
    @RequestMapping(value = "/api/activate", method = RequestMethod.GET)
    public ResponseEntity<UserDTO> apiActivateUserAccount(@RequestParam("activationToken") String activationToken) {
       log.debug("Activating user account...");
-      UserDTO userDTO = userService.verifyTokenAndActiveUser(activationToken);;
+      UserDTO userDTO = userService.verifyTokenAndActiveUser(activationToken);
       return ResponseEntity.ok(userDTO);
 
    }

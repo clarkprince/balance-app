@@ -19,7 +19,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+
+import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 @Component
@@ -68,7 +71,8 @@ public class AuthenticationService {
    }
 
    public VerificationToken createVerificationToken(User user) {
-      String token = UUID.randomUUID().toString();
+      //String token = UUID.randomUUID().toString();
+	  String token = new DecimalFormat("000000").format(new Random().nextInt(999999));
       VerificationToken verificationToken = new VerificationToken();
       verificationToken.setToken(token);
       verificationToken.setExpiration(new Date());
