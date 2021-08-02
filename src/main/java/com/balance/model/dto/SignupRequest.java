@@ -1,32 +1,37 @@
 package com.balance.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-public class SignupRequest   {
-  @JsonProperty("firstName")
-  private String firstName;
+@ApiModel("Signup Request")
+public class SignupRequest {
 
-  @JsonProperty("lastName")
-  private String lastName;
+   @ApiModelProperty(example = "John")
+   @JsonProperty("firstName")
+   private String firstName;
 
-  @JsonProperty("email")
-  private String email;
+   @ApiModelProperty(example = "Doe")
+   @JsonProperty("lastName")
+   private String lastName;
 
-  @JsonProperty("username")
-  private String username;
+   @ApiModelProperty(example = "john.doe@email.com")
+   @JsonProperty("email")
+   private String email;
 
-  @JsonProperty("password")
-  private String password;
+   @ApiModelProperty(example = "john_doe123")
+   @JsonProperty("username")
+   private String username;
 
-  @JsonProperty("roles")
-  private String roles;
+   @ApiModelProperty(example = "HXbk5Zk6")
+   @JsonProperty("password")
+   private String password;
 
    public SignupRequest(String firstName, String lastName, String username, String password, String roles) {
       this.firstName = firstName;
       this.lastName = lastName;
       this.username = username;
       this.password = password;
-      this.roles = roles;
    }
 
    public SignupRequest() {
@@ -46,10 +51,6 @@ public class SignupRequest   {
 
    public String getPassword() {
       return this.password;
-   }
-
-   public String getRoles() {
-      return this.roles;
    }
 
    public String getEmail() {
@@ -75,11 +76,6 @@ public class SignupRequest   {
    public void setPassword(String password) {
       this.password = password;
    }
-
-   public void setRoles(String roles) {
-      this.roles = roles;
-   }
-
 
 }
 

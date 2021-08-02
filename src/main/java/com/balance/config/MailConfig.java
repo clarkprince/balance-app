@@ -21,8 +21,8 @@ public class MailConfig {
    private String smtpHost;
    @Value("${mail.smtp.port}")
    private int smtpPort;
-   @Value("${mail.smtp.address}")
-   private String smtpAddress;
+   @Value("${mail.smtp.username}")
+   private String smtpUsername;
    @Value("${mail.smtp.password}")
    private String smtpPassword;
    @Value("${mail.smtp.auth}")
@@ -38,7 +38,7 @@ public class MailConfig {
       mailSender.setHost(smtpHost);
       mailSender.setPort(smtpPort);
 
-      mailSender.setUsername(smtpAddress);
+      mailSender.setUsername(smtpUsername);
       mailSender.setPassword(smtpPassword);
 
       Properties props = mailSender.getJavaMailProperties();

@@ -8,14 +8,15 @@ import com.balance.model.dto.UserDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 import static java.util.stream.Collectors.toList;
-import static org.apache.logging.log4j.util.Strings.isEmpty;
 
 @Component
 public class UserMapper {
-   private final PasswordEncoder passwordEncoder;
    private static final String ROLE_USER = "ROLE_USER";
 
+   private final PasswordEncoder passwordEncoder;
 
    public UserMapper(PasswordEncoder passwordEncoder) {
       this.passwordEncoder = passwordEncoder;
@@ -40,11 +41,8 @@ public class UserMapper {
       user.setLastName(signupRequest.getLastName());
       user.setEmail(signupRequest.getEmail());
       user.setActive(false);
-      String roles = signupRequest.getRoles();
-      if (isEmpty(roles)) {
-         roles = ROLE_USER;
-      }
-      user.setRoles(roles);
+      user.setRoles(ROLE_USER);
+      user.setCommunities(new ArrayList<>());
       return user;
    }
 

@@ -1,14 +1,20 @@
 package com.balance.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel("Community")
 public class CommunityDTO {
+   @ApiModelProperty(accessMode = ApiModelProperty.AccessMode.READ_ONLY)
    @JsonProperty("communityId")
    private Long communityId;
 
+   @ApiModelProperty(example = "demo community")
    @JsonProperty("name")
    private String name;
 
+   @ApiModelProperty(example = "1")
    @JsonProperty("cityId")
    private Long cityId;
 

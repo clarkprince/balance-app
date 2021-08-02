@@ -1,13 +1,19 @@
 package com.balance.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-public class LoginRequest   {
-  @JsonProperty("username")
-  private String username;
+@ApiModel("Login Request")
+public class LoginRequest {
 
-  @JsonProperty("password")
-  private String password;
+   @ApiModelProperty(example = "john_doe123")
+   @JsonProperty("username")
+   private String username;
+
+   @ApiModelProperty(example = "HXbk5Zk6")
+   @JsonProperty("password")
+   private String password;
 
    public LoginRequest(String username, String password) {
       this.username = username;

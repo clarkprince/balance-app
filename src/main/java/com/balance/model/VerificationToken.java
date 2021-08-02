@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "verification_token")
@@ -72,5 +73,18 @@ public class VerificationToken implements Serializable {
       calendar.setTime(new Date());
       calendar.add(Calendar.DATE, 1);
       this.endDate = calendar.getTime();
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      VerificationToken that = (VerificationToken) o;
+      return id == that.id;
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(id);
    }
 }

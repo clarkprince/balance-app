@@ -1,23 +1,30 @@
 package com.balance.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-
+@ApiModel("User")
 public class UserDTO {
+   @ApiModelProperty(example = "John")
    @JsonProperty("firstName")
    private String firstName;
 
+   @ApiModelProperty(example = "Doe")
    @JsonProperty("lastName")
    private String lastName;
 
+   @ApiModelProperty(example = "john_doe123")
    @JsonProperty("username")
    private String username;
 
+   @ApiModelProperty(example = "john.doe@email.com")
    @JsonProperty("email")
    private String email;
 
+   @ApiModelProperty(example = "true")
    @JsonProperty("active")
    private boolean active;
 
