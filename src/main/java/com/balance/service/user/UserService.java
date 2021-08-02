@@ -5,7 +5,6 @@ import com.balance.model.User;
 import com.balance.model.VerificationToken;
 import com.balance.model.dto.LoginRequest;
 import com.balance.model.dto.LoginResponse;
-import com.balance.model.dto.SignupRequest;
 import com.balance.model.dto.UserDTO;
 import com.balance.repository.UserRepository;
 import com.balance.service.EmailService;
@@ -36,9 +35,9 @@ public class UserService {
    }
 
    @Transactional
-   public VerificationToken signupAndSendVerificationEmail(SignupRequest signupRequest) {
-      log.info("Signing up user {}", signupRequest.getUsername());
-      User user = userMapper.mapUserFromSignupRequest(signupRequest);
+   public VerificationToken signupAndSendVerificationEmail(UserDTO userDTO) {
+      log.info("Signing up user {}", userDTO.getUsername());
+      User user = userMapper.mapUserFromSignupRequest(userDTO);
       User newUser = authenticationService.signup(user);
       VerificationToken verificationToken = authenticationService.createVerificationToken(newUser);
       emailService.sendVerificationTokenEmail(verificationToken);

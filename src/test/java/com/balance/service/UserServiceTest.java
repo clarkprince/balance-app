@@ -3,7 +3,7 @@ package com.balance.service;
 import com.balance.IntegrationTest;
 import com.balance.model.User;
 import com.balance.model.VerificationToken;
-import com.balance.model.dto.SignupRequest;
+import com.balance.model.dto.UserDTO;
 import com.balance.repository.UserRepository;
 import com.balance.service.mapper.UserMapper;
 import com.balance.service.user.AuthenticationService;
@@ -47,7 +47,7 @@ public class UserServiceTest extends IntegrationTest {
    @Test
    public void shouldSignupAndSendVerificationEmail() throws Exception {
       //given
-      SignupRequest signupRequest = prepareSignupRequest();
+      UserDTO signupRequest = prepareSignupRequest();
       User user = prepareUser();
       VerificationToken verificationToken = prepareVerificationToken(user);
 
@@ -87,13 +87,13 @@ public class UserServiceTest extends IntegrationTest {
       return user;
    }
 
-   private SignupRequest prepareSignupRequest() {
-      SignupRequest signupRequest = new SignupRequest();
-      signupRequest.setFirstName(TEST_FIRSTNAME);
-      signupRequest.setLastName(TEST_LASTNAME);
-      signupRequest.setUsername(TEST_USERNAME);
-      signupRequest.setPassword(TEST_PASSWORD);
-      return signupRequest;
+   private UserDTO prepareSignupRequest() {
+      UserDTO userDTO = new UserDTO();
+      userDTO.setFirstName(TEST_FIRSTNAME);
+      userDTO.setLastName(TEST_LASTNAME);
+      userDTO.setUsername(TEST_USERNAME);
+      userDTO.setPassword(TEST_PASSWORD);
+      return userDTO;
    }
 
 }

@@ -35,9 +35,9 @@ public class ApiController {
    @ApiOperation(value = "Sign Up User", nickname = "apiSignupPost", tags = "Users")
    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success")})
    @RequestMapping(value = "/api/signup", consumes = {"application/json-patch+json", "application/json", "text/json", "application/_*+json"}, method = RequestMethod.POST)
-   public ResponseEntity<VerificationToken> apiSignup(@Valid @RequestBody SignupRequest signupRequest) {
+   public ResponseEntity<VerificationToken> apiSignup(@Valid @RequestBody UserDTO userDTO) {
       log.info("Adding new user...");
-      VerificationToken verificationToken = userService.signupAndSendVerificationEmail(signupRequest);
+      VerificationToken verificationToken = userService.signupAndSendVerificationEmail(userDTO);
       return ResponseEntity.ok(verificationToken);
    }
 
