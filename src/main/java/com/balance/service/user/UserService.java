@@ -49,8 +49,8 @@ public class UserService {
       return new LoginResponse(token);
    }
 
-   public UserDTO verifyTokenAndActiveUser(String token) {
-      User user = authenticationService.verifyTokenAndActiveUser(token);
+   public UserDTO verifyTokenAndActivateUser(String token) {
+      User user = authenticationService.verifyTokenAndActivateUser(token);
       return userMapper.toUserDto(user);
    }
 

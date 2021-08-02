@@ -44,7 +44,7 @@ public class AuthenticationService {
       this.verificationTokenRepository = verificationTokenRepository;
    }
 
-   public User verifyTokenAndActiveUser(String token) {
+   public User verifyTokenAndActivateUser(String token) {
       VerificationToken verificationToken = verificationTokenRepository.findVerificationTokenByToken(token).orElseThrow(RuntimeException::new);
       User user = verifyToken(verificationToken);
       user.setActive(true);

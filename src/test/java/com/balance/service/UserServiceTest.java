@@ -3,6 +3,8 @@ package com.balance.service;
 import com.balance.IntegrationTest;
 import com.balance.model.User;
 import com.balance.model.VerificationToken;
+import com.balance.model.dto.LoginRequest;
+import com.balance.model.dto.LoginResponse;
 import com.balance.model.dto.UserDTO;
 import com.balance.repository.UserRepository;
 import com.balance.service.mapper.UserMapper;
@@ -12,10 +14,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -66,6 +68,38 @@ public class UserServiceTest extends IntegrationTest {
       verify(emailService, times(1)).sendVerificationTokenEmail(eq(actualToken));
    }
 
+   @Test
+   public void shouldLoginAndReturnUser() throws Exception {
+      //given
+      LoginRequest loginRequest = new LoginRequest();
+      loginRequest.setUsername(TEST_USERNAME);
+      loginRequest.setPassword(TEST_PASSWORD);
+      String token = UUID.randomUUID().toString();
+      when(authenticationService.login(loginRequest)).thenReturn(token);
+
+      //when
+      LoginResponse loginResponse = userService.login(loginRequest);
+
+      //then
+      verify(authenticationService, times(1)).login(eq(loginRequest));
+      assertEquals(token, loginResponse.getToken());
+   }
+
+   @Test
+   public void shouldVerifyTokenAndActivateUser() {
+      String token = UUID.randomUUID().toString();
+      User user = prepareUser();
+      when(authenticationService.verifyTokenAndActivateUser(token)).thenReturn(user);
+      when(userMapper.toUserDto(user)).thenReturn(new UserDTO());
+
+      //when
+      userService.verifyTokenAndActivateUser(token);
+
+      //then
+      verify(authenticationService, times(1)).verifyTokenAndActivateUser(eq(token));
+      verify(userMapper, times(1)).toUserDto(eq(user));
+   }
+
    private VerificationToken prepareVerificationToken(User user) {
       VerificationToken verificationToken = new VerificationToken();
       verificationToken.setUser(user);
@@ -78,7 +112,7 @@ public class UserServiceTest extends IntegrationTest {
    private User prepareUser() {
       User user = new User();
       user.setActive(false);
-      user.setCommunities(Collections.emptyList());
+      user.setCommunities(emptyList());
       user.setId(TEST_USER_ID);
       user.setFirstName(TEST_FIRSTNAME);
       user.setLastName(TEST_LASTNAME);

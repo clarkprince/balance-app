@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -32,7 +33,7 @@ public class ApiController {
       this.cityService = cityService;
    }
 
-   @ApiOperation(value = "Sign Up User", nickname = "apiSignupPost", tags = "Users")
+   @ApiOperation(value = "Sign Up User", nickname = "apiSignupPost", tags = "User")
    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success")})
    @RequestMapping(value = "/api/signup", consumes = {"application/json-patch+json", "application/json", "text/json", "application/_*+json"}, method = RequestMethod.POST)
    public ResponseEntity<VerificationToken> apiSignup(@Valid @RequestBody UserDTO userDTO) {
@@ -50,16 +51,16 @@ public class ApiController {
       return ResponseEntity.ok(communityService.addCommunity(communityDTO));
    }
 
-   @ApiOperation(value = "Add City", nickname = "apiCitiesCityIdPost", authorizations = @Authorization(value = "Bearer"), tags = "Cities")
+   @ApiOperation(value = "Add City", nickname = "apiCitiesCityIdPost", authorizations = @Authorization(value = "Bearer"), tags = "City")
    @ApiResponses(value = @ApiResponse(code = 200, message = "Success"))
-   @RequestMapping(value = "/api/cities/", consumes = {"application/json-patch+json", "application/json", "text/json", "application/_*+json"}, method = RequestMethod.PUT)
+   @RequestMapping(value = "/api/cities", consumes = {"application/json-patch+json", "application/json", "text/json", "application/_*+json"}, method = RequestMethod.PUT)
    public ResponseEntity<CityDTO> apiCitiesCity(@RequestBody CityDTO cityDTO) {
       log.info("Adding new city...");
       return ResponseEntity.ok(cityService.addCity(cityDTO));
 
    }
 
-   @ApiOperation(value = "Login User", nickname = "apiLoginPost", tags = "Users")
+   @ApiOperation(value = "Login User", nickname = "apiLoginPost", tags = "User")
    @ApiResponses(value = @ApiResponse(code = 200, message = "Success"))
    @RequestMapping(value = "/api/login", consumes = {"application/json-patch+json", "application/json", "text/json", "application/_*+json"}, method = RequestMethod.POST)
    public ResponseEntity<LoginResponse> apiLogin(@Valid @RequestBody LoginRequest loginRequest) {
@@ -79,14 +80,22 @@ public class ApiController {
       return ResponseEntity.ok(userDTO);
    }
 
-   @ApiOperation(value = "User Account Activation", nickname = "apiActivateUserAccount", tags = "Users")
+   @ApiOperation(value = "User Account Activation", nickname = "apiActivateUserAccount", tags = "User")
    @ApiResponses(value = @ApiResponse(code = 200, message = "Success"))
    @RequestMapping(value = "/api/activate", method = RequestMethod.GET)
    public ResponseEntity<UserDTO> apiActivateUserAccount(@RequestParam("activationToken") String activationToken) {
       log.debug("Activating user account...");
-      UserDTO userDTO = userService.verifyTokenAndActiveUser(activationToken);
+      UserDTO userDTO = userService.verifyTokenAndActivateUser(activationToken);;
       return ResponseEntity.ok(userDTO);
+   }
 
+   @ApiOperation(value = "Get All Cities", nickname = "apiGetCities", tags = "City")
+   @ApiResponses(value = @ApiResponse(code = 200, message = "Success"))
+   @RequestMapping(value = "/api/cities", method = RequestMethod.GET)
+   public ResponseEntity<List<CityDTO>> apiGetCities() {
+      log.debug("Activating user account...");
+      List<CityDTO> cities = cityService.getAllCities();;
+      return ResponseEntity.ok(cities);
    }
 
 }

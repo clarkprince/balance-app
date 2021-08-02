@@ -7,37 +7,37 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	@Column(unique = true, nullable = false)
-	
+
 	private String username;
 	@Column(unique = true, nullable = false)
-	
+
 	private String password;
 	@Column(nullable = false)
-	
+
 	private String firstName;
 	@Column(nullable = false)
-	
+
 	private String lastName;
 	@Column(nullable = false)
-	
+
 	private String city;
 	@Column(nullable = false)
-	
+
 	private String address;
 	@Column(nullable = false)
-	
+
 	private String phoneNumber;
 	@Column(nullable = false)
-	
+
 	private String roles;
 	@Column(nullable = false)
-	
+
 	private boolean active;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Community> communities;
