@@ -15,8 +15,6 @@ public class User implements Serializable {
    @Column(unique = true, nullable = false)
    private String username;
    @Column(unique = true, nullable = false)
-   private String email;
-   @Column(nullable = false)
    private String password;
    @Column(nullable = false)
    private String firstName;
@@ -101,14 +99,6 @@ public class User implements Serializable {
 
    public void setActive(boolean active) {
       this.active = active;
-   }
-
-   public String getEmail() {
-      return email;
-   }
-
-   public void setEmail(String email) {
-      this.email = email;
    }
 
    @Override

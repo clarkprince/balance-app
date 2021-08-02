@@ -41,7 +41,7 @@ public class EmailService {
    }
 
    private MimeMessage createActivationEmail(VerificationToken verificationToken) throws MessagingException {
-      String email = verificationToken.getUser().getEmail();
+      String email = verificationToken.getUser().getUsername();
       MimeMessage mimeMessage = javaMailSender.createMimeMessage();
       MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
       mimeMessageHelper.setSubject("User Account Activation");
