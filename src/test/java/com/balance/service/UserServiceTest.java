@@ -22,10 +22,9 @@ import static org.mockito.Mockito.*;
 
 public class UserServiceTest extends IntegrationTest {
 
-   private static final String TEST_EMAIL = "test@mail.com";
    private static final String TEST_FIRSTNAME = "John";
    private static final String TEST_LASTNAME = "Doe";
-   private static final String TEST_USERNAME = "john_doe123";
+   private static final String TEST_USERNAME = "test@mail.com";
    private static final String TEST_PASSWORD = "HXbk5Zk6";
    private static final long TEST_USER_ID = 1L;
    private static final long TEST_TOKEN_ID = 2L;
@@ -81,7 +80,6 @@ public class UserServiceTest extends IntegrationTest {
       user.setActive(false);
       user.setCommunities(Collections.emptyList());
       user.setId(TEST_USER_ID);
-      user.setEmail(TEST_EMAIL);
       user.setFirstName(TEST_FIRSTNAME);
       user.setLastName(TEST_LASTNAME);
       user.setPassword(TEST_PASSWORD);
@@ -91,7 +89,6 @@ public class UserServiceTest extends IntegrationTest {
 
    private SignupRequest prepareSignupRequest() {
       SignupRequest signupRequest = new SignupRequest();
-      signupRequest.setEmail(TEST_EMAIL);
       signupRequest.setFirstName(TEST_FIRSTNAME);
       signupRequest.setLastName(TEST_LASTNAME);
       signupRequest.setUsername(TEST_USERNAME);
