@@ -45,7 +45,7 @@ public class AuthenticationService {
       VerificationToken verificationToken = verificationTokenRepository.findVerificationTokenByToken(token).orElseThrow(RuntimeException::new);
       User user = verifyToken(verificationToken);
       user.setActive(true);
-      log.info("User {} is activated", user.getEmail());
+      log.info("User {} is activated", user.getUsername());
       return user;
    }
 

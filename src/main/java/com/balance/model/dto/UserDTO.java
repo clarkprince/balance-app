@@ -16,6 +16,10 @@ public class UserDTO {
    @JsonProperty("lastName")
    private String lastName;
 
+   @ApiModelProperty(example = "john_doe123")
+   @JsonProperty("username")
+   private String username;
+
    @ApiModelProperty(example = "john.doe@email.com")
    @JsonProperty("email")
    private String email;
@@ -27,9 +31,10 @@ public class UserDTO {
    @JsonProperty("communities")
    private List<CommunityDTO> communities;
 
-   public UserDTO(String firstName, String lastName, String email, boolean active, String roles, List<CommunityDTO> communities) {
+   public UserDTO(String firstName, String lastName, String username, String email, boolean active, String roles, List<CommunityDTO> communities) {
       this.firstName = firstName;
       this.lastName = lastName;
+      this.username = username;
       this.email = email;
       this.active = active;
       this.communities = communities;
@@ -46,7 +51,9 @@ public class UserDTO {
       return this.lastName;
    }
 
-
+   public String getUsername() {
+      return this.username;
+   }
 
    public List<CommunityDTO> getCommunities() {
       return this.communities;
@@ -60,6 +67,9 @@ public class UserDTO {
       this.lastName = lastName;
    }
 
+   public void setUsername(String username) {
+      this.username = username;
+   }
 
    public void setCommunities(List<CommunityDTO> communities) {
       this.communities = communities;
