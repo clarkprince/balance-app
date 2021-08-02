@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin
 public class ApiController {
 
    private static final Logger log = LoggerFactory.getLogger(ApiController.class);

@@ -24,7 +24,7 @@ public class UserMapper {
 
 
    public UserDTO toUserDto(User user) {
-      return new UserDTO(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.isActive(), user.getRoles(),
+      return new UserDTO(user.getFirstName(), user.getLastName(), user.getEmail(), user.isActive(), user.getRoles(),
             user.getCommunities().stream().map(this::toCommunityDTO).collect(toList())
       );
    }
@@ -35,7 +35,6 @@ public class UserMapper {
 
    public User mapUserFromSignupRequest(SignupRequest signupRequest) {
       User user = new User();
-      user.setUsername(signupRequest.getUsername());
       user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
       user.setFirstName(signupRequest.getFirstName());
       user.setLastName(signupRequest.getLastName());
