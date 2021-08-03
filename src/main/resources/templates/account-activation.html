@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <title>Account Activation</title>
+</head>
+<body>
+<p th:text="${'Hello ' + name + '!'}"></p>
+<p>
+    You have been successfully registered to the <b>Balance App</b> on
+    <span th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></span>
+<p th:text="${'Please click on the link below to activate your account:'}"></p>
+<a th:href="${activationLink}">Activation Link</a>
+<p><b>Note: Activation link will expire in 24 hours!</b></p>
+<p>
+    <em th:text="${'Regards,'}"></em> <br/>
+    <em th:text="${sign}"></em>
+<p th:text="${location}"></p>
+</body>
+</html>

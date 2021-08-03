@@ -5,7 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.templatemode.TemplateMode;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 @Configuration
@@ -14,6 +18,8 @@ public class MailConfig {
    private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
    private static final String MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
    private static final String MAIL_DEBUG = "mail.debug";
+   private static final String TEMPLATES_PATH = "classpath:/templates/";
+   private static final String HTML_SUFFIX = ".html";
 
    @Value("${mail.transport.protocol}")
    private String transportProtocol;
@@ -48,5 +54,23 @@ public class MailConfig {
       props.put(MAIL_DEBUG, smtpDebug);
 
       return mailSender;
+   }
+
+   @Bean
+   public SpringTemplateEngine springTemplateEngine(SpringResourceTemplateResolver htmlTemplateResolver) {
+      SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+      templateEngine.addTemplateResolver(htmlTemplateResolver);
+      templateEngine.setEnableSpringELCompiler(true);
+      return templateEngine;
+   }
+
+   @Bean
+   public SpringResourceTemplateResolver htmlTemplateResolver() {
+      SpringResourceTemplateResolver emailTemplateResolver = new SpringResourceTemplateResolver();
+      emailTemplateResolver.setPrefix(TEMPLATES_PATH);
+      emailTemplateResolver.setSuffix(HTML_SUFFIX);
+      emailTemplateResolver.setTemplateMode(TemplateMode.HTML);
+      emailTemplateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
+      return emailTemplateResolver;
    }
 }
