@@ -13,6 +13,7 @@ import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -88,6 +89,16 @@ public class ApiController {
       UserDTO userDTO = userService.verifyTokenAndActivateUser(activationToken);;
       return ResponseEntity.ok(userDTO);
    }
+   
+   @ApiOperation(value = "Resend Token", nickname = "apiResendToken", tags = "User")
+   @ApiResponses(value = @ApiResponse(code = 200, message = "Success"))
+   @RequestMapping(value = "/api/resendToken", method = RequestMethod.GET)
+   public BodyBuilder apiResendToken(@RequestParam("id") String id) {
+      log.debug("Resending token...");
+      userService.resendAuthToken(id);
+      return ResponseEntity.ok();
+   }
+
 
    @ApiOperation(value = "Get All Cities", nickname = "apiGetCities", tags = "City")
    @ApiResponses(value = @ApiResponse(code = 200, message = "Success"))

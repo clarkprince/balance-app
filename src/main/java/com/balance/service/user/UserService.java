@@ -53,6 +53,11 @@ public class UserService {
       User user = authenticationService.verifyTokenAndActivateUser(token);
       return userMapper.toUserDto(user);
    }
+   
+   public void resendAuthToken(String id) {
+	  VerificationToken token = authenticationService.getTokenByUserName(id);
+	  emailService.sendVerificationTokenEmail(token);
+   }
 
    @Transactional
 //   @PreAuthorize("hasRole('ROLE_ADMIN')")

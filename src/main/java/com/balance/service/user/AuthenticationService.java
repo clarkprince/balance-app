@@ -1,6 +1,5 @@
 package com.balance.service.user;
 
-
 import com.balance.config.JwtProvider;
 import com.balance.model.User;
 import com.balance.model.UserDetailsInfo;
@@ -22,81 +21,86 @@ import javax.transaction.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
 @Component
 @Transactional
 public class AuthenticationService {
-   private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
-   private final UserRepository userRepository;
-   private final AuthenticationManager authenticationManager;
-   private final JwtProvider jwtProvider;
-   private final VerificationTokenRepository verificationTokenRepository;
+	private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
+	private final UserRepository userRepository;
+	private final AuthenticationManager authenticationManager;
+	private final JwtProvider jwtProvider;
+	private final VerificationTokenRepository verificationTokenRepository;
 
-   public AuthenticationService(UserRepository userRepository,
-                                AuthenticationManager authenticationManager,
-                                JwtProvider jwtProvider,
-                                VerificationTokenRepository verificationTokenRepository) {
-      this.userRepository = userRepository;
-      this.authenticationManager = authenticationManager;
-      this.jwtProvider = jwtProvider;
-      this.verificationTokenRepository = verificationTokenRepository;
-   }
+	public AuthenticationService(UserRepository userRepository, AuthenticationManager authenticationManager,
+			JwtProvider jwtProvider, VerificationTokenRepository verificationTokenRepository) {
+		this.userRepository = userRepository;
+		this.authenticationManager = authenticationManager;
+		this.jwtProvider = jwtProvider;
+		this.verificationTokenRepository = verificationTokenRepository;
+	}
 
-   public User verifyTokenAndActivateUser(String token) {
-      VerificationToken verificationToken = verificationTokenRepository.findVerificationTokenByToken(token).orElseThrow(RuntimeException::new);
-      User user = verifyToken(verificationToken);
-      user.setActive(true);
-      log.info("User {} is activated", user.getUsername());
-      return user;
-   }
+	public User verifyTokenAndActivateUser(String token) {
+		VerificationToken verificationToken = verificationTokenRepository.findVerificationTokenByToken(token)
+				.orElseThrow(RuntimeException::new);
+		User user = verifyToken(verificationToken);
+		user.setActive(true);
+		log.info("User {} is activated", user.getUsername());
+		return user;
+	}
 
-   @PreAuthorize("hasRole('ROLE_ADMIN')")
-   public User activateUser(String username, boolean isActive) {
-      return setActive(username, isActive);
-   }
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public User activateUser(String username, boolean isActive) {
+		return setActive(username, isActive);
+	}
 
-   public String login(LoginRequest loginRequest) {
-      Authentication authenticate = authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+	public String login(LoginRequest loginRequest) {
+		Authentication authenticate = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-      UserDetailsInfo userDetailsInfo = (UserDetailsInfo) authenticate.getPrincipal();
-      return jwtProvider.generateToken(userDetailsInfo.getUsername());
-   }
+		UserDetailsInfo userDetailsInfo = (UserDetailsInfo) authenticate.getPrincipal();
+		return jwtProvider.generateToken(userDetailsInfo.getUsername());
+	}
 
-   public UserDetails getCurrentPrincipal() {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      return (UserDetails) authentication.getPrincipal();
-   }
+	public UserDetails getCurrentPrincipal() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return (UserDetails) authentication.getPrincipal();
+	}
 
-   public VerificationToken createVerificationToken(User user) {
-      //String token = UUID.randomUUID().toString();
-	  String token = new DecimalFormat("000000").format(new Random().nextInt(999999));
-      VerificationToken verificationToken = new VerificationToken();
-      verificationToken.setToken(token);
-      verificationToken.setExpiration(new Date());
-      verificationToken.setUser(user);
-      verificationTokenRepository.save(verificationToken);
-      return verificationToken;
-   }
+	public VerificationToken createVerificationToken(User user) {
+		// String token = UUID.randomUUID().toString();
+		String token = new DecimalFormat("000000").format(new Random().nextInt(999999));
+		VerificationToken verificationToken = new VerificationToken();
+		verificationToken.setToken(token);
+		verificationToken.setExpiration(new Date());
+		verificationToken.setUser(user);
+		verificationTokenRepository.save(verificationToken);
+		return verificationToken;
+	}
 
-   public User signup(User user) {
-      return userRepository.save(user);
-   }
+	public User signup(User user) {
+		return userRepository.save(user);
+	}
 
-   private User setActive(String username, boolean isActive) {
-      User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException(username));
-      user.setActive(isActive);
-      return user;
-   }
+	private User setActive(String username, boolean isActive) {
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException(username));
+		user.setActive(isActive);
+		return user;
+	}
 
-   private User verifyToken(VerificationToken verificationToken) {
-      Date activationDate = new Date();
-      if (activationDate.before(verificationToken.getStartDate()) || activationDate.after(verificationToken.getEndDate())) {
-         throw new RuntimeException();
-      }
-      return verificationToken.getUser();
-   }
+	private User verifyToken(VerificationToken verificationToken) {
+		Date activationDate = new Date();
+		if (activationDate.before(verificationToken.getStartDate())
+				|| activationDate.after(verificationToken.getEndDate())) {
+			throw new RuntimeException();
+		}
+		return verificationToken.getUser();
+	}
 
+	public VerificationToken getTokenByUserName(String id) {
+		User user = userRepository.findByUsername(id).orElseThrow(RuntimeException::new);
+		return verificationTokenRepository.findVerificationTokenByUser(user);
+	}
 }
