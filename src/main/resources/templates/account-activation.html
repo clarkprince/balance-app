@@ -8,7 +8,7 @@
 <p th:text="${'Hello ' + name + '!'}"></p>
 <p>
     You have been successfully registered to the <b>Balance App</b> on
-    <span th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></span>
+    <span th:text="${#dates.format(tokenStartDate, 'dd MMM yyyy HH:mm')}"></span>
 <p th:text="${'Please click on the link below to activate your account:'}"></p>
 <a th:href="${activationLink}">Activation Link</a>
 <p><b>Note: Activation link will expire in 24 hours!</b></p>

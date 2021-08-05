@@ -12,33 +12,34 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	@Column(unique = true, nullable = false)
 
+	@Column(unique = true, nullable = false)
 	private String username;
-	@Column(unique = true, nullable = false)
 
+	@Column(nullable = false)
 	private String password;
-	@Column(nullable = false)
 
+	@Column(nullable = false)
 	private String firstName;
-	@Column(nullable = false)
 
+	@Column(nullable = false)
 	private String lastName;
-	@Column(nullable = false)
 
+	@Column(nullable = false)
 	private String city;
-	@Column(nullable = false)
 
+	@Column(nullable = false)
 	private String address;
-	@Column(nullable = false)
 
+	@Column(nullable = false)
 	private String phoneNumber;
-	@Column(nullable = false)
 
+	@Column(nullable = false)
 	private String roles;
-	@Column(nullable = false)
 
+	@Column(nullable = false)
 	private boolean active;
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Community> communities;
 
@@ -46,7 +47,7 @@ public class User implements Serializable {
 		if (Objects.isNull(communities)) {
 			communities = new ArrayList<>();
 		}
-		if (communities.contains(community)) {
+		if (!communities.contains(community)) {
 			community.setUser(this);
 			communities.add(community);
 		}

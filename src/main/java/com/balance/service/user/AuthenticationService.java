@@ -18,12 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 @Component
 @Transactional
@@ -99,8 +96,7 @@ public class AuthenticationService {
 		return verificationToken.getUser();
 	}
 
-	public VerificationToken getTokenByUserName(String id) {
-		User user = userRepository.findByUsername(id).orElseThrow(RuntimeException::new);
-		return verificationTokenRepository.findVerificationTokenByUser(user);
+	public VerificationToken getTokenByUsername(String username) {
+		return verificationTokenRepository.findVerificationTokenByUserUsername(username);
 	}
 }

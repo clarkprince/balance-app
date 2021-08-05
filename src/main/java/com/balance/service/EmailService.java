@@ -28,6 +28,7 @@ public class EmailService {
    private static final String ACCOUNT_ACTIVATION_TEMPLATE = "account-activation";
    private static final String ACTIVATION_LINK_KEY = "activationLink";
    private static final String API_ACTIVATE_TOKEN = "/api/activate?activationToken=";
+   private static final String TOKEN_START_DATE_KEY = "tokenStartDate";
 
    @Value("${server.baseUrl}")
    private String baseUrl;
@@ -37,6 +38,8 @@ public class EmailService {
    private String mailSign;
    @Value("${mail.location}")
    private String mailLocation;
+   @Value("${mail.activation.subject}")
+   private String mailActivationSubject;
 
    private final JavaMailSender mailSender;
    private final SpringTemplateEngine templateEngine;
@@ -63,7 +66,7 @@ public class EmailService {
       Map<String, Object> mailProperties = getActivationMailProperties(verificationToken);
       String html = templateEngine.process(ACCOUNT_ACTIVATION_TEMPLATE, new Context(Locale.getDefault(), mailProperties));
 
-      mimeMessageHelper.setSubject("User Account Activation");
+      mimeMessageHelper.setSubject(mailActivationSubject);
       mimeMessageHelper.setText(html, true);
       mimeMessageHelper.setFrom(senderAddress);
       mimeMessageHelper.setTo(email);
@@ -77,6 +80,7 @@ public class EmailService {
       mailProperties.put(NAME_KEY, user.getFirstName());
       mailProperties.put(SIGN_KEY, mailSign);
       mailProperties.put(LOCATION_KEY, mailLocation);
+      mailProperties.put(TOKEN_START_DATE_KEY, verificationToken.getStartDate());
       mailProperties.put(ACTIVATION_LINK_KEY, baseUrl + API_ACTIVATE_TOKEN + verificationToken.getToken());
       return mailProperties;
    }

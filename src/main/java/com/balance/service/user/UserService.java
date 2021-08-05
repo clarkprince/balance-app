@@ -53,10 +53,10 @@ public class UserService {
       User user = authenticationService.verifyTokenAndActivateUser(token);
       return userMapper.toUserDto(user);
    }
-   
-   public void resendAuthToken(String id) {
-	  VerificationToken token = authenticationService.getTokenByUserName(id);
-	  emailService.sendVerificationTokenEmail(token);
+
+   public void resendAuthToken(String username) {
+      VerificationToken token = authenticationService.getTokenByUsername(username);
+      emailService.sendVerificationTokenEmail(token);
    }
 
    @Transactional

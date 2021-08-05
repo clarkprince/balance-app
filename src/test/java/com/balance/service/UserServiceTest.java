@@ -1,39 +1,38 @@
 package com.balance.service;
 
 import com.balance.IntegrationTest;
+import com.balance.model.Community;
 import com.balance.model.User;
 import com.balance.model.VerificationToken;
 import com.balance.model.dto.LoginRequest;
 import com.balance.model.dto.LoginResponse;
 import com.balance.model.dto.UserDTO;
+import com.balance.repository.CommunityRepository;
 import com.balance.repository.UserRepository;
 import com.balance.service.mapper.UserMapper;
 import com.balance.service.user.AuthenticationService;
 import com.balance.service.user.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 
-import java.util.Date;
+import javax.transaction.Transactional;
 import java.util.UUID;
 
-import static java.util.Collections.emptyList;
+import static com.balance.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest extends IntegrationTest {
-
-   private static final String TEST_FIRSTNAME = "John";
-   private static final String TEST_LASTNAME = "Doe";
-   private static final String TEST_USERNAME = "test@mail.com";
-   private static final String TEST_PASSWORD = "HXbk5Zk6";
-   private static final long TEST_USER_ID = 1L;
-   private static final long TEST_TOKEN_ID = 2L;
-   private static final String ROLE_USER = "ROLE_USER";
    private UserService userService;
-   @MockBean
+   @Autowired
    private UserRepository userRepository;
+   @Autowired
+   private CommunityRepository communityRepository;
    @MockBean
    private UserMapper userMapper;
    @MockBean
@@ -47,7 +46,7 @@ public class UserServiceTest extends IntegrationTest {
    }
 
    @Test
-   public void shouldSignupAndSendVerificationEmail() throws Exception {
+   public void shouldSignupAndSendVerificationEmail() {
       //given
       UserDTO signupRequest = prepareSignupRequest();
       User user = prepareUser();
@@ -69,7 +68,7 @@ public class UserServiceTest extends IntegrationTest {
    }
 
    @Test
-   public void shouldLoginAndReturnUser() throws Exception {
+   public void shouldLoginAndReturnUser() {
       //given
       LoginRequest loginRequest = new LoginRequest();
       loginRequest.setUsername(TEST_USERNAME);
@@ -87,6 +86,7 @@ public class UserServiceTest extends IntegrationTest {
 
    @Test
    public void shouldVerifyTokenAndActivateUser() {
+      //given
       String token = UUID.randomUUID().toString();
       User user = prepareUser();
       when(authenticationService.verifyTokenAndActivateUser(token)).thenReturn(user);
@@ -100,34 +100,32 @@ public class UserServiceTest extends IntegrationTest {
       verify(userMapper, times(1)).toUserDto(eq(user));
    }
 
-   private VerificationToken prepareVerificationToken(User user) {
-      VerificationToken verificationToken = new VerificationToken();
-      verificationToken.setUser(user);
-      verificationToken.setExpiration(new Date());
-      verificationToken.setToken(UUID.randomUUID().toString());
-      verificationToken.setId(TEST_TOKEN_ID);
-      return verificationToken;
+   @Test
+   @Sql(value = {"classpath:/sql/cities.sql", "classpath:/sql/communities.sql", "classpath:/sql/users.sql"}, config = @SqlConfig(separator = ";"))
+   public void shouldAttachCommunityToUser() {
+      //given
+      Community community = communityRepository.getById(100300L);
+      //when
+      userService.attachCommunityToUser(2329L, community);
+      //then
+      User user = userRepository.getById(2329L);
+      assertEquals("john.doe@email.com", user.getUsername());
+      assertEquals(community.getId(), user.getCommunities().get(0).getId());
    }
 
-   private User prepareUser() {
-      User user = new User();
-      user.setActive(false);
-      user.setCommunities(emptyList());
-      user.setId(TEST_USER_ID);
-      user.setFirstName(TEST_FIRSTNAME);
-      user.setLastName(TEST_LASTNAME);
-      user.setPassword(TEST_PASSWORD);
-      user.setRoles(ROLE_USER);
-      return user;
-   }
+   @Test
+   public void resendAuthToken() {
+      //given
+      User user = prepareUser();
+      VerificationToken verificationToken = prepareVerificationToken(user);
+      when(authenticationService.getTokenByUsername(TEST_USERNAME)).thenReturn(verificationToken);
 
-   private UserDTO prepareSignupRequest() {
-      UserDTO userDTO = new UserDTO();
-      userDTO.setFirstName(TEST_FIRSTNAME);
-      userDTO.setLastName(TEST_LASTNAME);
-      userDTO.setUsername(TEST_USERNAME);
-      userDTO.setPassword(TEST_PASSWORD);
-      return userDTO;
+      //when
+      userService.resendAuthToken(TEST_USERNAME);
+
+      //then
+      verify(authenticationService, times(1)).getTokenByUsername(TEST_USERNAME);
+      verify(emailService, times(1)).sendVerificationTokenEmail(verificationToken);
    }
 
 }
